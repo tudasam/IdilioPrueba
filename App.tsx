@@ -2,7 +2,7 @@ import 'react-native-url-polyfill/auto'
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase'
 import Auth from './components/Auth'
-import {TextInput,ScrollView, View, Text, StyleSheet,Pressable, FlatList} from 'react-native'
+import {TextInput,ScrollView, View, Text, StyleSheet,Pressable, FlatList,Modal, ImageBackground,Image} from 'react-native'
 import { Session } from '@supabase/supabase-js'
 
 type Show = {
@@ -20,6 +20,8 @@ export default function App() {
   const [session, setSession] = useState<Session | null>(null)
   const [fetchError, setFetchError] = useState("")
   const [orgData, setOrgData] = useState<Grouped>({})
+  const [modalVisible, setModalVisible] = useState(false)
+  const [selectedShow, setSelectedShow] = useState<Show | null>(null)
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
@@ -65,7 +67,7 @@ export default function App() {
         {Object.entries(orgData).map(([category, shows]) => (
           <View key={`cat-${category}`} style={styles.category}>
             <View  >
-              <Text style={{ color: '#fff', fontWeight: '700', fontSize: 18, marginLeft: 16, marginBottom: 8 }}>
+              <Text style={{ color: '#fff', fontWeight: '700', fontSize: 18, marginLeft: 16, marginBottom: 8, marginTop: 8  }}>
                 {category}
               </Text>
             </View>
@@ -75,14 +77,56 @@ export default function App() {
               data={shows}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <Pressable style={styles.box} key={item.id}>
-                  <Text style={styles.text}>{item.show_name}</Text>
+                
+                <Pressable style={styles.box} key={item.id} onPress={() => {
+                  setSelectedShow(item)
+                  setModalVisible(true)
+                }}>
+                  <ImageBackground source={{ uri: item.poster || 'https://via.placeholder.com/200x300?text=No+Image' }} style={{width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}} imageStyle={{ borderRadius: 10 }}>
+                    <Text style={styles.text}>{item.show_name}</Text>
+                    </ImageBackground>
                 </Pressable>
+                
               )}
             />
+          
           </View>
         ))}
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={{flex:1, justifyContent:'center', alignItems:'center', backgroundColor: 'rgba(0, 0, 0, 0.49)'}}>
+          <View style={{width:320, height:650, backgroundColor:'rgba(5, 6, 20, 1)', borderRadius:20, padding:20, alignItems:'center'}}>
+            <Text style={{borderRadius:2,margin:2,color:'rgba(255, 255, 255, 1)',fontSize:22, fontWeight:'bold', marginBottom:10}}>{selectedShow?.show_name}</Text>
+            <Image 
+              source={{ uri: selectedShow?.poster || 'https://via.placeholder.com/200x300?text=No+Image' }} 
+              style={{ width: 200, height: 300, borderRadius: 10, marginBottom: 10 }} 
+            />
+            <View style={styles.modaltext}>
+              <Text style={{color:"white",marginBottom:1}}>Summary:</Text>
+              <Text style={{color:"white",marginBottom:20}}>{selectedShow?.summary || "No summary available."}</Text>
+            </View>
+            <ScrollView style={styles.modaltext}>
+              <Text style={{color:"white", marginBottom:10,}}>Episodes:</Text>
+              {selectedShow?.chapter_list?.map((chapter, index) => (
+                <Text key={index} style={{color:"white",marginBottom:10}}>{chapter}</Text>
+              )) || <Text>No chapters available.</Text>}
+            </ScrollView>
+            <Pressable
+              style={{backgroundColor:'#0f4957ff', borderRadius:10, padding:10}}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={{color:'#fff'}}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       
       {session && session.user && <Text>{session.user.id}</Text>}
       
@@ -97,8 +141,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   box:{
-    backgroundColor: 'rgba(73, 26, 12, 1)',
-    borderRadius: 20,
+    backgroundColor: 'rgba(36, 61, 82, 1)',
+    borderRadius: 10,
     padding: 10,
     margin: 10,
     width: 200,
@@ -107,7 +151,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   topBox:{
-    backgroundColor: 'rgba(131, 43, 17, 1)',
+    backgroundColor: 'rgba(30, 92, 116, 1)',
     padding: 10,
     margin: 10,
     width: 350,
@@ -116,11 +160,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   category:{
-    backgroundColor: 'rgba(34, 17, 3, 1)',
+    backgroundColor: 'rgba(5, 8, 20, 1)',
     borderRadius: 10,
     margin: 10,
   
     textAlign: 'left',
+  },
+  modaltext:{
+    backgroundColor: 'rgba(19, 41, 59, 1)',
+    borderRadius: 10,
+    padding: 10,
+    margin: 10,
+    width: "100%",
+    textAlign: 'center',
+    alignSelf: 'center',
   },
   text:{
     color: '#ffffff',

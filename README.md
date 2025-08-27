@@ -48,7 +48,7 @@ Se implementó la función **`get_all_categories_with_shows`**, que:
 ## 🤖 Prompts usados en IA
 
 - Generación de información en CSV para subir a Supabase.
-
+- Apoyo para la creación de la función SQL
 ---
 
 ## 🔮 Próximos pasos (si hubiera más tiempo)

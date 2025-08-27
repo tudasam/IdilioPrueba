@@ -1,34 +1,52 @@
-§ Cómo correr el proyecto.
-Prerequisitos:
--Node.js
--npm
--Expo CLI
+🎬 Idilio Prueba
 
-Clonar repositorio
-git clone https://github.com/tudasam/IdilioPrueba/tree/
+Este proyecto es una prueba técnica que muestra series y capítulos obtenidos desde una base de datos en Supabase (Postgres), organizados por categorías.
+
+🚀 Instalación y ejecución
+
+Clonar el repositorio:
+
+git clone https://github.com/tudasam/IdilioPrueba.git
 cd Idilio
 
 Instalar dependencias:
+
 npm install
 
-Iniciar el proyecto
+Iniciar el proyecto:
+
 npm start
-§ Funciones de SQL implementadas.
-Se implementó una función llamada get_all_categories_with_shows la cual reordena los datos en un json, y agrupa shows según las categorías a la que pertenecen.
-Un show puede pertenecer a más de una categoría así que es probable que los shows se repitan en alguna ocasión.
 
-§ Decisiones técnicas (1–2 párrafos).
--Por restricción de tiempo se optó a solo implementar la funcionalidad más básica requerida por la prueba, es decir, lectura de la base de datos
-Postgres en supabase para mostrar los shows por categoría.
--Se decidió por simplicidad y fines prácticos generar la base de datos por medio de inteligencia artificial.
--Se decidió usar un componente tipo "Modal" para mostrar la vista de detalle de cada show
+🗄️ Funciones SQL implementadas
 
-§ Prompts usados en IA.
--Generación de información en CSV para subirlo en supabase
--
-§ Qué harías a continuación si tuvieras más tiempo.
--Usar una base de datos más extensa, que incluya más de 3 capítulos por show
--Video previews de los shows cuando se muestra la pantalla de detalle del show
--Búsqueda de shows por medio de la barra de busqueda.
--Sistema de favoritos.
--Historial de vistas.
+Se implementó la función get_all_categories_with_shows, que:
+
+Reordena los datos en un JSON.
+
+Agrupa los shows según sus categorías.
+
+Dado que un show puede pertenecer a múltiples categorías, puede aparecer repetido.
+
+⚙️ Decisiones técnicas
+
+Por restricción de tiempo, solo se implementó la funcionalidad básica requerida: lectura de la base de datos Postgres en Supabase y visualización de los shows por categoría.
+
+Para simplicidad y fines prácticos, la base de datos se generó con ayuda de inteligencia artificial.
+
+Se utilizó un componente tipo Modal para mostrar la vista de detalle de cada show.
+
+🤖 Prompts usados en IA
+
+Generación de información en CSV para subir a Supabase.
+
+🔮 Próximos pasos (si hubiera más tiempo)
+
+Ampliar la base de datos con más capítulos por show (más de 3).
+
+Incluir video previews en la vista de detalle de cada show.
+
+Implementar búsqueda de shows desde la barra de búsqueda.
+
+Agregar un sistema de favoritos.
+
+Historial de vistas del usuario.
